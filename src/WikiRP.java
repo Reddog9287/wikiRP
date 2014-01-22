@@ -7,8 +7,35 @@ public class WikiRP {
 	public static void main(String[] args) throws JSONException {
 		WikiRPMethods researchPaper = new WikiRPMethods();
 
+		// Get input of three @titles
 		String title = "Pythagoras";
+
+		// Then dispatch an API request to Wikipedia Pages:
+		// String response = bodyOne.executePost("http://en.wikipedia.org/w/api.php","format=json&action=query&prop=revisions&rvprop=content&titles="+title);
+
+		// If Wikipedia returns an error, then send the string to Wiki Search
+			// Save top Wiki Search result
+			// Redo API request to Wiki Pages
+		
+		// Parse Wiki Pages result for "*"
+		
+		// Split result for refs or maybe even just plain 'ol sentences
+		
+		// Construct three body paragraphs
+		
+		// Construct a citation page
+		
+		// -------------------------------FUTURE----IDEAS----------------------------------- //
+		// * If just three things are entered, try to guess a proper thesis statement?
+		// * Randomize what sentences to use in the Wikipedia result
+		// * Use more than one source for each body paragraph
+		// * Export this to a native mac/win app with a web component
+		
+		
 		String response = researchPaper.executePost("http://en.wikipedia.org/w/api.php","format=json&action=query&prop=revisions&rvprop=content&titles="+title);
+		
+		
+		
 		JSONObject responseObj = new JSONObject(response);
 
 		// Method 1
