@@ -15,9 +15,9 @@ public class WikiRPMethods extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
-    public void buildUI() throws FontFormatException, IOException
+    @SuppressWarnings("unused")
+	public void buildUI() throws FontFormatException, IOException
     {
-    	@SuppressWarnings("unused")
 		Border empty;
     	Border textBorder = BorderFactory.createEmptyBorder(25,50,25,50);
     	empty = BorderFactory.createEmptyBorder();
@@ -43,7 +43,12 @@ public class WikiRPMethods extends JFrame {
         submit.addActionListener(
         	new ActionListener(){
             	public void actionPerformed(ActionEvent e){
-            		parseInput(txt.getText());
+            		try {
+						parseInput(txt.getText());
+					} catch (JSONException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
                 }
             }
         );
@@ -54,35 +59,55 @@ public class WikiRPMethods extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
     
-    public void parseInput(String input)
+    public void parseInput(String input) throws JSONException
     {
     	JPanel output = new JPanel();
     	JScrollPane scrPane = new JScrollPane(output);
     	add(scrPane);
-    	
+
     	setSize(400,800);
-    	output.add(new JLabel(input));
-    	setVisible(true);
+
     	// Study how to write a proper thesis statement
     	// Create an intent on wit.ai
     	// Make an API request to wit.ai
     	// Get the response to determine what the important data in the sentence is
     	
-    	System.out.println(input);
+    	String response = get("pages", input);
+    	String content = getContent(response);
+    	System.out.println(content);
+    	// Jim_Rose_(journalist) is a good, short wiki page to test with.
+		if (errors(content)) {
+			// this should be put into a method
+			// response = get("search", input);
+			// content = getContent(response);
+			System.out.println("redirecting.........");
+		} else
+			System.out.println("Moving on........");
+		
+		parse(content);
+		output.add(new JLabel(input));
+    	setVisible(true);
     }
     
-	public String get(String targetURL, String urlParameters)
+	public String get(String method, String input)
 	{
+		String urlParameters;
 	    URL url;
 	    HttpURLConnection connection = null;  
 	    try {
-	        // Create connection
-	        url = new URL(targetURL);
+	    	url = new URL("http://en.wikipedia.org/w/api.php");
+	    	if (method == "search") {
+	    		urlParameters = "format=json&action=query&list=search&srprop=timestamp&srsearch="+input;
+	    	} else if (method == "pages") {
+	    		urlParameters = "format=json&action=query&prop=revisions&rvprop=content&titles="+input;
+	    	} else
+	    		return "It appears that you have entered an invalid input";
+
 	        connection = (HttpURLConnection)url.openConnection();
 	        connection.setRequestMethod("GET");
 	        connection.setRequestProperty("Content-Type",
 	           "application/x-www-form-urlencoded");
-				
+
 	        connection.setUseCaches (false);
 	        connection.setDoInput(true);
 	        connection.setDoOutput(true);

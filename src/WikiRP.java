@@ -11,31 +11,31 @@ public class WikiRP {
 		researchPaper.buildUI();
 
 		// Get input of three @titles
-		String subjOne = "Pythagorus";
+//		String subjOne = "Pythagorus";
 
 		// Then dispatch an API request to Wikipedia Pages:
 		// @NOTE: This should be further functionalized into a .pagesReq method
 		// and a .searchReq method. Or maybe just one method, with the title,
 		// and then the method (ie. search or pages) passed in. Yes I think that
 		// is the best way to do that.
-		String response = researchPaper.get("http://en.wikipedia.org/w/api.php","format=json&action=query&prop=revisions&rvprop=content&titles="+subjOne);
+//		String response = researchPaper.get("",""+subjOne);
 
 		// Parse Wiki Pages result for "*"
 
-		String content = researchPaper.getContent(response);
+//		String content = researchPaper.getContent(response);
 
 		// If Wikipedia returns an error
 			// Send the string to Wiki SearchSave top Wiki Search result
 			// Redo API request to Wiki Pages
 
-		if (researchPaper.errors(content))
-			System.out.println("redirecting.........");
-		else
-			System.out.println("Moving on........");
+//		if (researchPaper.errors(content))
+//			System.out.println("redirecting.........");
+//		else
+//			System.out.println("Moving on........");
 
 		// Split result for refs or maybe even just plain 'ol sentences
 
-		researchPaper.parse(content);
+//		researchPaper.parse(content);
 
 		// Construct three body paragraphs
 		
