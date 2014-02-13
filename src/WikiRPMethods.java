@@ -7,16 +7,7 @@ import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 
-import javax.print.Doc;
-import javax.print.DocFlavor;
-import javax.print.DocPrintJob;
 import javax.print.PrintException;
-import javax.print.PrintService;
-import javax.print.PrintServiceLookup;
-import javax.print.SimpleDoc;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
-import javax.print.attribute.standard.Copies;
 import javax.swing.*;
 import javax.swing.border.Border;
 
@@ -25,9 +16,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.json.*;
-
-import com.pdfjet.*;
-import com.pdfjet.Point;
 
 public class WikiRPMethods extends JFrame implements Printable {
 
@@ -59,11 +47,28 @@ public class WikiRPMethods extends JFrame implements Printable {
         add(txt);
         add(submit);
 
+        final JCheckBox wik = new JCheckBox("Wikipedia");
+        final JCheckBox ebs = new JCheckBox("EBSCOHost");
+        final JCheckBox nyt = new JCheckBox("NY Times");
+        final JCheckBox amz = new JCheckBox("Amzn Books");
+        
         submit.addActionListener(
         	new ActionListener(){
             	public void actionPerformed(ActionEvent e){
             		try {
-						parseInput(txt.getText());
+
+            			if (wik.isSelected())
+            				parseInput(txt.getText(), "WIK");
+
+            			if (ebs.isSelected())
+            				parseInput(txt.getText(), "EBS");
+
+            			if (nyt.isSelected())
+            				parseInput(txt.getText(), "NYT");
+
+            			if (amz.isSelected())
+            				parseInput(txt.getText(), "AMZ");
+            			
 					} catch (JSONException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -78,13 +83,18 @@ public class WikiRPMethods extends JFrame implements Printable {
             }
         );
 
+        add(wik);
+        add(ebs);
+        add(nyt);
+        add(amz);
+
         setLayout(new FlowLayout());
         setSize(400,450);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
     
-    public void parseInput(String input) throws Exception
+    public void parseInput(String input, String method) throws Exception
     {
     	// Study how to write a proper thesis statement
     	// Create an intent on wit.ai
@@ -122,22 +132,6 @@ public class WikiRPMethods extends JFrame implements Printable {
 
             add(new JLabel("Research paper successfully saved & printed."));
 
-//            Print test = new Print(thesis);
-            // ????????? WHAT THE HELL
-
-//            PrinterJob job = PrinterJob.getPrinterJob();
-////            job.setPrintable();
-//
-//            boolean doPrint = job.printDialog();
-//            if (doPrint) {
-//                try {
-//                    job.print();
-//                } catch (PrinterException e) {
-//                	System.out.println(e);
-//                    // The job did not successfully
-//                    // complete
-//                }
-//            }
         } catch (IOException e) {
         	add(new JLabel("Error. No such file or directory."));
         	System.out.println(e);
@@ -146,33 +140,6 @@ public class WikiRPMethods extends JFrame implements Printable {
 		printPage();
 
     	setVisible(true);
-//    	
-//    	
-//    	 FileOutputStream fos = new FileOutputStream("research_paper.pdf");
-//    	 PDF pdf = new PDF(fos);
-//
-//    	 pdf.setTitle("Research Paper");
-//         pdf.setAuthor("WikiRP Tool");
-//
-//         Page page = new Page(pdf, Letter.PORTRAIT);
-//         TextColumn column = new TextColumn();
-//         column.setLineBetweenParagraphs(true);
-//         column.setLineSpacing(1.0);
-//         
-//         Paragraph p1 = new Paragraph();
-//         p1.setAlignment(Align.LEFT);
-//         p1.add(new TextLine(null, thesis));
-//         
-//         Paragraph p2 = new Paragraph();
-//         p2.add(new TextLine(null, content));
-//         
-//         column.addParagraph(p1);
-//         column.addParagraph(p2);
-//         column.setPosition(90, 300);
-//         column.setSize(470, 100);
-//         column.drawOn(page);
-//         pdf.flush();
-//         fos.close();
     }
     
 	public void printPage() {
@@ -187,22 +154,9 @@ public class WikiRPMethods extends JFrame implements Printable {
             }catch (PrinterException pex){
             	// oh no! the world is ending!
             	// let’s stop everything!
-//            	System.exit(0);
+            	// System.exit(0);
             }
         }
-		
-//		PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
-//	    pras.add(new Copies(1));
-//	    PrintService pss[] = PrintServiceLookup.lookupPrintServices(DocFlavor.INPUT_STREAM.GIF, pras);
-//	    if (pss.length == 0)
-//	      throw new RuntimeException("No printer services available.");
-//	    PrintService ps = pss[0];
-//	    System.out.println("Printing to " + ps);
-//	    DocPrintJob job = ps.createPrintJob();
-//	    FileInputStream fin = new FileInputStream("research_paper.txt");
-//	    Doc doc = new SimpleDoc(fin, DocFlavor.INPUT_STREAM.GIF, null);
-//	    job.print(doc, pras);
-//	    fin.close();
 	}
 	
 	public int print(Graphics g, PageFormat pf, int index)
@@ -249,11 +203,6 @@ public class WikiRPMethods extends JFrame implements Printable {
     		// Move over to the right for next word.
     		curX += wordWidth;
     	}
-//        g.drawOval(x-50,y-50,100,100);
-//        g.drawString(sentences, 50, 50);
-//        g.fillOval(x-25,y-20,10,10);
-//        g.fillOval(x+20,y-20,10,10);
-//        g.drawArc(x-27,y+10,55,30,180,180);
     }
 
 	public String get(String method, String input)
@@ -358,24 +307,10 @@ public class WikiRPMethods extends JFrame implements Printable {
 			}
 			else
 			{
-//In_Rainbows_%E2%80%93_From_the_Basement
 				sentences += parts[i];
 			}
-//			System.out.println(parts[i]);
 		}
 		System.out.print(sentences);
 		return sentences;
-//		System.out.println(parts[0]);
-
-//		for (int i=0;i<parts.length;i++)
-//		{
-//			if (parts[i].contains("<ref>"))
-//			{
-//				String[] ref = parts[i].split("<ref>");
-////				System.out.println(ref[1]+"\r\n");
-//			}
-//			else 
-//				System.out.println("response contains no <ref>s");
-//		}
 	}
 }
